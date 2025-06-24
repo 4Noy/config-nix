@@ -42,6 +42,7 @@ in {
   xsession.enable = true;
 
   home.sessionVariables = {
+        # None for now
   };
 
   ## Timezone and locals
