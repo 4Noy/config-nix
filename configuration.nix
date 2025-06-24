@@ -32,7 +32,7 @@
     extraGroups  = [ "networkmanager" "wheel" ];
   };
 
-  # Unfree
+  # Unfree software
   nixpkgs.config.allowUnfree = true;
 
   # Security

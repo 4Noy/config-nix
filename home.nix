@@ -12,6 +12,7 @@ let
     "rofi"
     "i3"
     "firefox"
+        #"gpg"
   ];
   loadedModules = builtins.map (name: import (./modules/${name}.nix) { inherit root pkgs config; }) modules;
 
