@@ -1,20 +1,25 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   root = ./.;
 
   modules = [
     "alacritty"
+    "bluetooth"
+        #"discord"
     "dunst"
+    "firefox"
     "git"
+        #"gpg"
+    "i3"
+    "kubernetes"
+        #"lf" # "ranger"
     "neovim"
     "picom"
     "rofi"
-    "i3"
-    "firefox"
-        #"gpg"
+    "ssh"
   ];
-  loadedModules = builtins.map (name: import (./modules/${name}.nix) { inherit root pkgs config; }) modules;
+  loadedModules = builtins.map (name: import ("${root}/modules/${name}.nix") { inherit root config lib pkgs; }) modules;
 
 in {
   imports = loadedModules;

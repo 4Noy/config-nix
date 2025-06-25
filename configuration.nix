@@ -29,11 +29,21 @@
   # Users
   users.users.noy = {
     isNormalUser = true;
-    extraGroups  = [ "networkmanager" "wheel" ];
+    extraGroups  = [ "networkmanager" "wheel"  "docker"];
   };
 
   # Unfree software
   nixpkgs.config.allowUnfree = true;
+
+  # Docker
+  virtualisation.docker = {
+    enable = true;
+    enableOnBoot = true;
+    daemon.settings = {
+      iptables = true;
+      "log-driver" = "journald";
+    };
+  };
 
   # Security
   security.pam.services.i3lock = { enable = true; startSession = true; };
