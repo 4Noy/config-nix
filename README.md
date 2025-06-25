@@ -7,6 +7,7 @@ mkdir .config
 mv config-nix .config/home-manager
 cd .config/home-manager
 sudo cp configuration.nix /etc/nixos/configuration.nix
+# CHANGE THE LUKS NAME
 sudo nixos-rebuild switch
 nix run .#homeConfigurations.noy.activationPackage
 home-manager switch

@@ -20,7 +20,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   # LUKS
-  boot.initrd.luks.devices."luks-826d4347-814f-431f-8ab3-a36fba74898b".device = "/dev/disk/by-uuid/826d4347-814f-431f-8ab3-a36fba74898b";
+  boot.initrd.luks.devices."luks-6dd0b6ad-da7d-44da-8bf6-fb20b3be1486".device = "/dev/disk/by-uuid/6dd0b6ad-da7d-44da-8bf6-fb20b3be1486";
 
   # Network
   networking.hostName = "nixos";
