@@ -35,6 +35,11 @@
   # Unfree software
   nixpkgs.config.allowUnfree = true;
 
+  # Base Packages
+  environment.systemPackages = with pkgs; [
+    git
+  ];
+
   # Docker
   virtualisation.docker = {
     enable = true;
