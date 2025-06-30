@@ -22,7 +22,7 @@
 
     plugins = with pkgs.vimPlugins; [
       tokyonight-nvim
-      catppuccin-nvim
+      catppuccin
       lualine-nvim
       bufferline-nvim
       telescope-nvim
