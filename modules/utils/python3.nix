@@ -20,7 +20,7 @@ in {
     export WORKON_HOME="${vh}"
     export PROJECT_HOME="${config.home.homeDirectory}/Devel"
     export VIRTUALENVWRAPPER_PYTHON="${pkgs.python313Full}/bin/python3"
-    source "${pkgs.python310Packages.virtualenvwrapper}/bin/virtualenvwrapper.sh"
+    source "${pkgs.python313Packages.virtualenvwrapper}/bin/virtualenvwrapper.sh"
   '';
 
   home.file.".profile".text = ''
