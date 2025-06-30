@@ -3,14 +3,32 @@
 let
   root = ./.;
 
-  # 1) Common arguments for every module
   args = { inherit root config lib pkgs; };
 
-  # 2) Per‑category lists of module basenames
-  apps     = [ "alacritty" "firefox" "git" "kubernetes" "neovim" ];
-  wms      = [ "i3" ];
-  utils    = [ "bluetooth" "dunst" "picom" "rofi" ];
-  security = [ "ssh" ];
+  apps     = [
+    "alacritty"
+    "firefox"
+    "git"
+    "kubernetes"
+    "neovim"
+    "spotify"
+  ];
+
+  wms      = [
+    "i3"
+  ];
+
+  utils    = [
+    "bluetooth"
+    "dunst"
+    "network-manager"
+    "picom"
+    "rofi"
+  ];
+
+  security = [
+    "ssh"
+  ];
 
   importMod = category: name:
     import (root + "/modules/${category}/${name}.nix") args;
