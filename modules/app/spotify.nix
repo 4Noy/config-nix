@@ -1,13 +1,23 @@
-{ root, config, pkgs, ... }: {
+{ config, pkgs, lib, ... }:
+
+let
+  mediaBindings = lib.concatStringsSep "\n" [
+    # Play/Pause
+    '"playerctl play-pause" XF86AudioPlay'
+    # Next / Previous
+    '"playerctl next"       XF86AudioNext'
+    '"playerctl previous"   XF86AudioPrev'
+  ];
+in {
   home.packages = with pkgs; [
     spotify
     playerctl
+    xbindkeys
   ];
 
-  programs.xbindkeys.enable = true;
-  home.file.".config/xbindkeys/spotify".text = ''
-    "playerctl play-pause"  XF86AudioPlay
-    "playerctl next"        XF86AudioNext
-    "playerctl previous"    XF86AudioPrev
-  '';
+  home.file.".xbindkeysrc".text = mediaBindings;
+
+  xsession.windowManager.sessionCommands = [
+    "xbindkeys &"
+  ];
 }
