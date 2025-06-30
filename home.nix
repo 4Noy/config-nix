@@ -2,24 +2,28 @@
 
 let
   root = ./.;
-in {
-  imports = [
-    ./modules/app/alacritty.nix
-    ./modules/utils/bluetooth.nix
-        #./modules/app/discord.nix
-    ./modules/utils/dunst.nix
-    ./modules/app/firefox.nix
-    ./modules/app/git.nix
-        #./modules/security/gpg.nix
-    ./modules/wm/i3.nix
-    ./modules/app/kubernetes.nix
-        #./modules/app/lf.nix # ./modules/app/ranger.nix
-    ./modules/app/neovim.nix
-    ./modules/utils/picom.nix
-    ./modules/utils/rofi.nix
-    ./modules/security/ssh.nix
-  ];
 
+  # 1) Common arguments for every module
+  args = { inherit root config lib pkgs; };
+
+  # 2) Per‑category lists of module basenames
+  apps     = [ "alacritty" "firefox" "git" "kubernetes" "neovim" ];
+  wms      = [ "i3" ];
+  utils    = [ "bluetooth" "dunst" "picom" "rofi" ];
+  security = [ "ssh" ];
+
+  importMod = category: name:
+    import (root + "/modules/${category}/${name}.nix") args;
+
+  appImports     = lib.map (name: importMod "app" name)     apps;
+  wmImports      = lib.map (name: importMod "wm"  name)     wms;
+  utilImports    = lib.map (name: importMod "utils" name)   utils;
+  secImports     = lib.map (name: importMod "security" name) security;
+
+  loadedModules = lib.concatLists [ appImports wmImports utilImports secImports ];
+in
+{
+  imports = loadedModules;
   home.username      = "noy";
   home.homeDirectory = "/home/noy";
   home.stateVersion  = "25.05";
