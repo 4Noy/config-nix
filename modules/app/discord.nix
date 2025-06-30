@@ -3,7 +3,7 @@
 let
   discordPkg = pkgs.discord.override { withVencord = true; };
   wallpaperPath    = "${root}/files/wallpapers/discord-wallpaper.jpg";
-  wallpaperDataUri = "data:image/jpeg;base64," + builtins.toBase64 (builtins.readFile wallpaperPath);
+  wallpaperDataUri = "data:image/jpeg;base64," + lib.toBase64 (builtins.readFile wallpaperPath);
   dest       = ".config/Vencord/themes";
 in {
   home.packages = [ discordPkg ];
