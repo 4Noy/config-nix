@@ -43,7 +43,7 @@
       friendly-snippets
       null-ls-nvim
       editorconfig-nvim
-      nvim-comment
+      comment-nvim
     ];
 
     extraConfig = ''
