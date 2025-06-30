@@ -1,11 +1,15 @@
 { config, pkgs, lib, root, ... }:
 
 let
-  discordPkg    = pkgs.discord.override { withVencord = true; };
-  wallSrc       = "${root}/files/wallpapers/discord-wallpaper.jpg";
-  destDir       = ".config/Vencord/themes";
-  themeName     = "ClearVision-v7-plants.theme.css";
-  cssLines = lib.concatStringsSep "\n" [
+  discordPkg = pkgs.discord.override { withVencord = true; };
+  wallpaper  = "${root}/files/wallpapers/discord-wallpaper.jpg";
+  dest       = ".config/Vencord/themes";
+in {
+  home.packages = [ discordPkg ];
+
+  home.file."${dest}/discord-wallpaper.jpg".source = wallpaper;
+
+  xdg.configFile."${dest}/default.theme.css".text = lib.concatStringsSep "\n" [
     "/**"
     " * @name ClearVision V7 for BetterDiscord (with custom background)"
     " * @version 7.0.1"
@@ -23,63 +27,46 @@ let
     "  --streaming-color: #593695;"
     "  --offline-color: #808080;"
     "  --background-shading-percent: 100%;"
-    "  --background-image: none;"
+    "  --background-image: url(\"file://${config.home.homeDirectory}/${dest}/discord-wallpaper.jpg\");"
     "  --background-position: center;"
     "  --background-size: cover;"
     "  --background-attachment: fixed;"
     "  --background-filter: saturate(calc(var(--saturation-factor,1)*1));"
     "  --user-popout-image: var(--background-image);"
+    "  --user-popout-position: var(--background-position);"
+    "  --user-popout-size: var(--background-size);"
+    "  --user-popout-attachment: var(--background-attachment);"
+    "  --user-popout-filter: var(--background-filter);"
     "  --user-modal-image: var(--background-image);"
+    "  --user-modal-position: var(--background-position);"
+    "  --user-modal-size: var(--background-size);"
+    "  --user-modal-attachment: var(--background-attachment);"
+    "  --user-modal-filter: var(--background-filter);"
     "  --home-icon: url(https://clearvision.github.io/icons/discord.svg);"
     "  --home-size: cover;"
     "  --main-font: \"gg sans\",\"Helvetica Neue\",Helvetica,Arial,sans-serif;"
     "  --code-font: Consolas,\"gg mono\",\"Liberation Mono\",Menlo,Courier,monospace;"
-    "}"
-    "/* theme light */"
-    ":is(.theme-light,.theme-dark .theme-light){"
-    "  --background-shading:rgba(252,252,252,0.3);"
-    "  --card-shading:rgba(252,252,252,0.3);"
-    "  --popout-shading:rgba(252,252,252,0.7);"
-    "  --modal-shading:rgba(252,252,252,0.5);"
-    "  --input-shading:rgba(0,0,0,0.3);"
-    "  --normal-text:#36363c;"
-    "  --muted-text:#75757e;"
-    "}"
-    "/* theme dark */"
-    ":is(.theme-dark,.theme-light .theme-dark){"
-    "  --background-shading:rgba(0,0,0,0.4);"
-    "  --card-shading:rgba(0,0,0,0.2);"
-    "  --popout-shading:rgba(0,0,0,0.6);"
-    "  --modal-shading:rgba(0,0,0,0.4);"
-    "  --input-shading:rgba(255,255,255,0.05);"
-    "  --normal-text:#d8d8db;"
-    "  --muted-text:#aeaeb4;"
-    "}"
-    "/* theme darker */"
-    ":is(.theme-darker,.theme-light .theme-darker){"
-    "  --background-shading:rgba(0,0,0,0.6);"
-    "  --card-shading:rgba(0,0,0,0.3);"
-    "  --popout-shading:rgba(0,0,0,0.7);"
-    "  --modal-shading:rgba(0,0,0,0.5);"
-    "  --input-shading:rgba(255,255,255,0.05);"
-    "  --normal-text:#fbfbfb;"
-    "  --muted-text:#94949c;"
-    "}"
-    "/* theme midnight */"
-    ":is(.theme-midnight,.theme-light .theme-midnight){"
-    "  --background-shading:rgba(0,0,0,0.8);"
-    "  --card-shading:rgba(0,0,0,0.4);"
-    "  --popout-shading:rgba(0,0,0,0.8);"
-    "  --modal-shading:rgba(0,0,0,0.6);"
-    "  --input-shading:rgba(255,255,255,0.05);"
-    "  --normal-text:#dcdcde;"
-    "  --muted-text:#86868e;"
+    "  --background-shading: rgba(0,0,0,0.4);"
+    "  --card-shading: rgba(0,0,0,0.2);"
+    "  --popout-shading: rgba(0,0,0,0.6);"
+    "  --modal-shading: rgba(0,0,0,0.4);"
+    "  --input-shading: rgba(255,255,255,0.05);"
+    "  --normal-text: #d8d8db;"
+    "  --muted-text: #aeaeb4;"
+    "  --background-shading: rgba(0,0,0,0.6);"
+    "  --card-shading: rgba(0,0,0,0.3);"
+    "  --popout-shading: rgba(0,0,0,0.7);"
+    "  --modal-shading: rgba(0,0,0,0.5);"
+    "  --input-shading: rgba(255,255,255,0.05);"
+    "  --normal-text: #fbfbfb;"
+    "  --muted-text: #94949c;"
+    "  --background-shading: rgba(0,0,0,0.8);"
+    "  --card-shading: rgba(0,0,0,0.4);"
+    "  --popout-shading: rgba(0,0,0,0.8);"
+    "  --modal-shading: rgba(0,0,0,0.6);"
+    "  --input-shading: rgba(255,255,255,0.05);"
+    "  --normal-text: #dcdcde;"
+    "  --muted-text: #86868e;"
     "}"
   ];
-in {
-  home.packages = [ discordPkg ];
-
-  home.file."${destDir}/discord-wallpaper.jpg".source = wallSrc;
-
-  xdg.configFile."${destDir}/${themeName}".text = cssLines;
 }
