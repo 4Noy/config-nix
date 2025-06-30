@@ -23,7 +23,6 @@ in {
     source "${pkgs.python310Packages.virtualenvwrapper}/bin/virtualenvwrapper.sh"
   '';
 
-  home.file.".profile".match = "PROFILE_INIT";
   home.file.".profile".text = ''
     [[ -f "$HOME/.envrc" ]] && eval "$(direnv hook bash)"
   '';
