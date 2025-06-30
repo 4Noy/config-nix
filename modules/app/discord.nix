@@ -8,8 +8,6 @@ let
 in {
   home.packages = [ discordPkg ];
 
-  home.file."${dest}/discord-wallpaper.jpg".source = wallpaper;
-
   home.file."${dest}/default.theme.css".text = lib.concatStringsSep "\n" [
     "/**"
     " * @name ClearVision V7 for BetterDiscord (with custom background)"
