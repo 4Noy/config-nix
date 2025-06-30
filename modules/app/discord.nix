@@ -2,7 +2,8 @@
 
 let
   discordPkg = pkgs.discord.override { withVencord = true; };
-  wallpaper  = "${root}/files/wallpapers/discord-wallpaper.jpg";
+  wallpaperPath    = "${root}/files/wallpapers/discord-wallpaper.jpg";
+  wallpaperDataUri = "data:image/jpeg;base64," + builtins.toBase64 (builtins.readFile wallpaperPath);
   dest       = ".config/Vencord/themes";
 in {
   home.packages = [ discordPkg ];
@@ -27,7 +28,7 @@ in {
     "  --streaming-color: #593695;"
     "  --offline-color: #808080;"
     "  --background-shading-percent: 100%;"
-    "  --background-image: url(\"file://${config.home.homeDirectory}/${dest}/discord-wallpaper.jpg\");"
+    "  --background-image: url(\"${wallpaperDataUri}\");"
     "  --background-position: center;"
     "  --background-size: cover;"
     "  --background-attachment: fixed;"
