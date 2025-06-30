@@ -23,7 +23,7 @@ let
     "  --streaming-color: #593695;"
     "  --offline-color: #808080;"
     "  --background-shading-percent: 100%;"
-    "  --background-image: url(\"https://images2.alphacoders.com/108/1083585.jpg\");"
+    "  --background-image: url(\"https://4noy.github.io/discord-wallpaper.jpg\");"
     "  --background-position: center;"
     "  --background-size: cover;"
     "  --background-attachment: fixed;"
