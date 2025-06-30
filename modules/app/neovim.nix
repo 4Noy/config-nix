@@ -75,7 +75,7 @@
           indent = { enable = true },
         }
 
-        require("comment").setup()
+        require("Comment").setup()
 
         require("editorconfig").setup {}
 
