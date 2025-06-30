@@ -17,7 +17,7 @@ in {
 
   home.file.".xbindkeysrc".text = mediaBindings;
 
-  xsession.windowManager.sessionCommands = [
+  home.sessionCommands = [
     "xbindkeys &"
   ];
 }
