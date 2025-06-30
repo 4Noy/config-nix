@@ -63,6 +63,7 @@
         require('nvim-tree').setup{}
         require('telescope').setup{}
         require('editorconfig').setup{}
+        require('Comment').setup{}
 
         require('nvim-treesitter.configs').setup{
           highlight={ enable=true },
