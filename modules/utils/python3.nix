@@ -4,10 +4,10 @@ let
   vh = "${config.home.homeDirectory}/.virtualenvs";
 in {
   home.packages = with pkgs; [
-    python310Full
-    python310Packages.virtualenv
-    python310Packages.virtualenvwrapper
-    python310Packages.ipython
+    python313Full
+    python313Packages.virtualenv
+    python313Packages.virtualenvwrapper
+    python313Packages.ipython
     direnv
   ];
 
