@@ -28,7 +28,7 @@
       telescope-nvim
       nvim-tree-lua
       gitsigns-nvim
-      comment-nvim
+      Comment-nvim
 
       nvim-treesitter.withAllGrammars
       nvim-lspconfig
