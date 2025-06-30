@@ -4,10 +4,10 @@ let
   discordPkg    = pkgs.discord.override { withVencord = true; };
   wallSrc       = "${root}/files/wallpapers/discord-wallpaper.jpg";
   destDir       = ".config/Vencord/themes";
-  themeName     = "default-natute-tokyo.theme.css";
+  themeName     = "default-nature-tokyo.theme.css";
   cssLines = lib.concatStringsSep "\n" [
     "/**"
-    " * @name ClearVision V7 for BetterDiscord (with custom background)"
+    " * @name Default nature tokyo night theme"
     " * @version 7.0.1"
     " */"
     "@import url(\"https://clearvision.github.io/ClearVision-v7/main.css\");"
