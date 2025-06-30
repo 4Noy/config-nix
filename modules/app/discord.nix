@@ -2,7 +2,6 @@
 
 let
   discordPkg  = pkgs.discord.override { withVencord = true; };
-  wallpaper   = "${root}/files/wallpapers/discord-wallpaper.jpg";
   themeDir    = ".config/Vencord/themes";
   themeName   = "default-nature-tokyo.theme.css";
   css = lib.concatStringsSep "\n" [
@@ -13,7 +12,7 @@ let
     "@import url('https://discordstyles.github.io/SoftX/SoftX.css');"
     "@import url(\"https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap\");"
     ":root {"
-    "  --background-image: url(\"./discord-wallpaper.jpg\");"
+    "  --background-image: url(\"https://4noy.github.io/discord-wallpaper.jpg\");"
     "  --background-blur: 0px;"
     "  --accent: hsl(164 100% 45%);"
     "  --accent-text: hsl(0 0 0%);"
@@ -42,8 +41,6 @@ let
   ];
 in {
   home.packages = [ discordPkg ];
-
-  home.file."${themeDir}/discord-wallpaper.jpg".source = wallpaper;
 
   home.file."${themeDir}/${themeName}".text = css;
 }
