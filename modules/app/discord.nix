@@ -12,7 +12,7 @@ in {
   home.file.".config/Vencord/themes/plant-themed.jpg".source = plantImg;
 
   xdg.configFile."Vencord/themes/tokyo-night-plants.theme.css".text = lib.concatStringsSep "\n" [
-    '@import url("https://raw.githubusercontent.com/Dyzean/Tokyo-Night/main/themes/tokyo-night.theme.css");'
+    "@import url(\"https://raw.githubusercontent.com/Dyzean/Tokyo-Night/main/themes/tokyo-night.theme.css\");"
     ""
     "/* overlay a subtle plant wallpaper */"
     "body {"
@@ -22,5 +22,5 @@ in {
     "  opacity: 0.85;"
     "}"
   ];
-}
 
+}
