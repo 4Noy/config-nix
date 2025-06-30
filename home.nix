@@ -25,6 +25,7 @@ let
     "network-manager"
     "picom"
     "rofi"
+    "python3"
   ];
 
   security = [
