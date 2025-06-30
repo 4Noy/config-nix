@@ -41,7 +41,7 @@ let
   loadedModules = lib.concatLists [ appImports wmImports utilImports secImports ];
 in
 {
-  pkgs.config.allowUnfree = true;
+  nixpkgs.config.allowUnfree = true;
 
   imports = loadedModules;
   home.username      = "noy";
