@@ -23,7 +23,7 @@ let
     "  --streaming-color: #593695;"
     "  --offline-color: #808080;"
     "  --background-shading-percent: 100%;"
-    "  --background-image: url(\"file://${config.home.homeDirectory}/${destDir}/discord-wallpaper.jpg\");"
+    "  --background-image: none;"
     "  --background-position: center;"
     "  --background-size: cover;"
     "  --background-attachment: fixed;"
