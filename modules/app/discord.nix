@@ -4,7 +4,7 @@ let
   discordPkg    = pkgs.discord.override { withVencord = true; };
   wallSrc       = "${root}/files/wallpapers/discord-wallpaper.jpg";
   destDir       = ".config/Vencord/themes";
-  themeName     = "ClearVision-v7-plants.theme.css";
+  themeName     = "default-natute-tokyo.theme.css";
   cssLines = lib.concatStringsSep "\n" [
     "/**"
     " * @name ClearVision V7 for BetterDiscord (with custom background)"
