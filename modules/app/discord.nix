@@ -9,7 +9,7 @@ in {
 
   home.file."${dest}/discord-wallpaper.jpg".source = wallpaper;
 
-  xdg.configFile."${dest}/default.theme.css".text = lib.concatStringsSep "\n" [
+  home.file."${dest}/default.theme.css".text = lib.concatStringsSep "\n" [
     "/**"
     " * @name ClearVision V7 for BetterDiscord (with custom background)"
     " * @version 7.0.1"
