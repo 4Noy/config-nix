@@ -81,5 +81,5 @@ in {
 
   home.file."${destDir}/discord-wallpaper.jpg".source = wallSrc;
 
-  xdg.configFile."${destDir}/${themeName}".text = cssLines;
+  home.file."${destDir}/${themeName}".text = cssLines;
 }
