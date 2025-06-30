@@ -7,6 +7,7 @@ let
 
   apps     = [
     "alacritty"
+    "discord"
     "firefox"
     "git"
     "kubernetes"
