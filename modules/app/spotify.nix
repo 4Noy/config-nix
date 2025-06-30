@@ -2,9 +2,7 @@
 
 let
   mediaBindings = lib.concatStringsSep "\n" [
-    # Play/Pause
     "\"playerctl play-pause\" XF86AudioPlay"
-    # Next / Previous
     "\"playerctl next\"       XF86AudioNext"
     "\"playerctl previous\"   XF86AudioPrev"
   ];
@@ -15,9 +13,16 @@ in {
     xbindkeys
   ];
 
+  # Configure xbindkeys with media key bindings
   home.file.".xbindkeysrc".text = mediaBindings;
 
-  home.sessionCommands = [
-    "xbindkeys &"
+  # Create portable autostart entry following XDG spec
+  home.file.".config/autostart/xbindkeys.desktop".text = lib.concatStringsSep "\n" [
+    "[Desktop Entry]"
+    "Type=Application"
+    "Name=XBindKeys"
+    "Exec=${pkgs.xbindkeys}/bin/xbindkeys"
+    "NoDisplay=true"
+    "X-GNOME-Autostart-enabled=true"
   ];
 }
