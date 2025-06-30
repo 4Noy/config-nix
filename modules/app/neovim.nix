@@ -1,13 +1,13 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, lib, ... }: {
   programs.neovim = {
     enable = true;
     vimAlias = true;
     defaultEditor = true;
 
     extraPackages = with pkgs; [
+      python313Full
+      python313Packages.pynvim
       lua-language-server
-      pyright
-      rust-analyzer
       clang-tools
       nodePackages.typescript-language-server
       nodePackages.vscode-langservers-extracted
@@ -28,13 +28,11 @@
       telescope-nvim
       nvim-tree-lua
       gitsigns-nvim
-      Comment-nvim
-
+      vim-fugitive
       nvim-treesitter.withAllGrammars
       nvim-lspconfig
       mason-nvim
       mason-lspconfig-nvim
-
       nvim-cmp
       cmp-nvim-lsp
       cmp-buffer
@@ -43,87 +41,72 @@
       luasnip
       cmp_luasnip
       friendly-snippets
-
       null-ls-nvim
       editorconfig-nvim
-      vim-fugitive
+      nvim-comment
     ];
 
     extraConfig = ''
       syntax on
-      set number
-      set relativenumber
+      set number relativenumber
       set mouse=a
       set clipboard=unnamedplus
-      set tabstop=4
-      set shiftwidth=4
       set expandtab
       set smartindent
 
       lua << EOF
-        require("catppuccin").setup({ flavour = "mocha" })
-        vim.cmd.colorscheme "catppuccin"
+        require('catppuccin').setup{ flavour = 'mocha' }
+        vim.cmd.colorscheme 'catppuccin'
+        require('lualine').setup{ options = { theme = 'catppuccin' } }
+        require('bufferline').setup{}
+        require('gitsigns').setup{}
+        require('nvim-tree').setup{}
+        require('telescope').setup{}
+        require('editorconfig').setup{}
 
-        require("lualine").setup { options = { theme = "catppuccin" } }
-        require("bufferline").setup{}
-        require("gitsigns").setup()
-        require("nvim-tree").setup()
-        require("telescope").setup{}
-
-        require("nvim-treesitter.configs").setup {
-          highlight = { enable = true },
-          indent = { enable = true },
+        require('nvim-treesitter.configs').setup{
+          highlight={ enable=true },
+          indent={ enable=true },
         }
 
-        require("Comment").setup()
-
-        require("editorconfig").setup {}
-
-        local lspconfig = require("lspconfig")
-        local cmp = require("cmp")
-
-        require("mason").setup()
-        require("mason-lspconfig").setup {
+        local mason = require('mason')
+        mason.setup()
+        require('mason-lspconfig').setup{
           ensure_installed = {
-            "pyright", "clangd", "lua_ls", "tsserver", "bashls", "jsonls", "yamlls", "jdtls"
-          },
-          automatic_installation = true,
+            'pyright', 'clangd', 'lua_ls', 'tsserver',
+            'bashls', 'jsonls', 'yamlls', 'jdtls'
+          }
         }
 
-        local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
-        local servers = { "pyright", "clangd", "tsserver", "bashls", "jsonls", "yamlls", "jdtls", "lua_ls" }
-        for _, lsp in ipairs(servers) do
-          lspconfig[lsp].setup { capabilities = capabilities }
+        local lsp = require('lspconfig')
+        local caps = require('cmp_nvim_lsp').default_capabilities()
+        for _, ls in ipairs(mason.lspconfig.get_installed_servers()) do
+          lsp[ls].setup{ capabilities = caps }
         end
 
-        cmp.setup {
-          snippet = {
-            expand = function(args)
-              require("luasnip").lsp_expand(args.body)
-            end,
+        require('cmp').setup{
+          snippet={
+            expand=function(args) require('luasnip').lsp_expand(args.body) end
           },
-          mapping = cmp.mapping.preset.insert({
-            ['<C-Space>'] = cmp.mapping.complete(),
-            ['<CR>'] = cmp.mapping.confirm({ select = true }),
-          }),
-          sources = cmp.config.sources({
-            { name = "nvim_lsp" },
-            { name = "luasnip" },
-          }, {
-            { name = "buffer" },
-            { name = "path" },
-          }),
+          mapping=require('cmp').mapping.preset.insert{
+            ['<C-Space>'] = require('cmp').mapping.complete(),
+            ['<CR>'] = require('cmp').mapping.confirm{ select=true },
+          },
+          sources={
+            { name='nvim_lsp' },
+            { name='luasnip' },
+          }
         }
 
-        local null_ls = require("null-ls")
-        null_ls.setup {
-          sources = {
-            null_ls.builtins.formatting.black,
-            null_ls.builtins.formatting.prettier,
-            null_ls.builtins.diagnostics.eslint,
-          },
+        require('null-ls').setup{
+          sources={
+            require('null-ls').builtins.formatting.black,
+            require('null-ls').builtins.formatting.prettier,
+            require('null-ls').builtins.diagnostics.eslint,
+          }
         }
+
+        require('nvim_comment').setup{}
       EOF
     '';
   };
