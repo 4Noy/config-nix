@@ -1,85 +1,49 @@
 { config, pkgs, lib, root, ... }:
 
 let
-  discordPkg    = pkgs.discord.override { withVencord = true; };
-  wallSrc       = "${root}/files/wallpapers/discord-wallpaper.jpg";
-  destDir       = ".config/Vencord/themes";
-  themeName     = "default-nature-tokyo.theme.css";
-  cssLines = lib.concatStringsSep "\n" [
+  discordPkg  = pkgs.discord.override { withVencord = true; };
+  wallpaper   = "${root}/files/wallpapers/discord-wallpaper.jpg";
+  themeDir    = ".config/Vencord/themes";
+  themeName   = "default-nature-tokyo.theme.css";
+  css = lib.concatStringsSep "\n" [
     "/**"
-    " * @name Default nature tokyo night theme"
-    " * @version 7.0.1"
+    " * @name SoftX with custom background"
+    " * @version 2.0.0"
     " */"
-    "@import url(\"https://clearvision.github.io/ClearVision-v7/main.css\");"
-    "@import url(\"https://clearvision.github.io/ClearVision-v7/betterdiscord.css\");"
+    "@import url('https://discordstyles.github.io/SoftX/SoftX.css');"
+    "@import url(\"https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap\");"
     ":root {"
-    "  --main-color: #2780e6;"
-    "  --hover-color: #1e63b3;"
-    "  --success-color: #43b581;"
-    "  --danger-color: #982929;"
-    "  --online-color: #43b581;"
-    "  --idle-color: #faa61a;"
-    "  --dnd-color: #982929;"
-    "  --streaming-color: #593695;"
-    "  --offline-color: #808080;"
-    "  --background-shading-percent: 100%;"
-    "  --background-image: url(\"https://4noy.github.io/discord-wallpaper.jpg\");"
-    "  --background-position: center;"
-    "  --background-size: cover;"
-    "  --background-attachment: fixed;"
-    "  --background-filter: saturate(calc(var(--saturation-factor,1)*1));"
-    "  --user-popout-image: var(--background-image);"
-    "  --user-modal-image: var(--background-image);"
-    "  --home-icon: url(https://clearvision.github.io/icons/discord.svg);"
-    "  --home-size: cover;"
-    "  --main-font: \"gg sans\",\"Helvetica Neue\",Helvetica,Arial,sans-serif;"
-    "  --code-font: Consolas,\"gg mono\",\"Liberation Mono\",Menlo,Courier,monospace;"
-    "}"
-    "/* theme light */"
-    ":is(.theme-light,.theme-dark .theme-light){"
-    "  --background-shading:rgba(252,252,252,0.3);"
-    "  --card-shading:rgba(252,252,252,0.3);"
-    "  --popout-shading:rgba(252,252,252,0.7);"
-    "  --modal-shading:rgba(252,252,252,0.5);"
-    "  --input-shading:rgba(0,0,0,0.3);"
-    "  --normal-text:#36363c;"
-    "  --muted-text:#75757e;"
-    "}"
-    "/* theme dark */"
-    ":is(.theme-dark,.theme-light .theme-dark){"
-    "  --background-shading:rgba(0,0,0,0.4);"
-    "  --card-shading:rgba(0,0,0,0.2);"
-    "  --popout-shading:rgba(0,0,0,0.6);"
-    "  --modal-shading:rgba(0,0,0,0.4);"
-    "  --input-shading:rgba(255,255,255,0.05);"
-    "  --normal-text:#d8d8db;"
-    "  --muted-text:#aeaeb4;"
-    "}"
-    "/* theme darker */"
-    ":is(.theme-darker,.theme-light .theme-darker){"
-    "  --background-shading:rgba(0,0,0,0.6);"
-    "  --card-shading:rgba(0,0,0,0.3);"
-    "  --popout-shading:rgba(0,0,0,0.7);"
-    "  --modal-shading:rgba(0,0,0,0.5);"
-    "  --input-shading:rgba(255,255,255,0.05);"
-    "  --normal-text:#fbfbfb;"
-    "  --muted-text:#94949c;"
-    "}"
-    "/* theme midnight */"
-    ":is(.theme-midnight,.theme-light .theme-midnight){"
-    "  --background-shading:rgba(0,0,0,0.8);"
-    "  --card-shading:rgba(0,0,0,0.4);"
-    "  --popout-shading:rgba(0,0,0,0.8);"
-    "  --modal-shading:rgba(0,0,0,0.6);"
-    "  --input-shading:rgba(255,255,255,0.05);"
-    "  --normal-text:#dcdcde;"
-    "  --muted-text:#86868e;"
+    "  --background-image: url(\"./discord-wallpaper.jpg\");"
+    "  --background-blur: 0px;"
+    "  --accent: hsl(164 100% 45%);"
+    "  --accent-text: hsl(0 0 0%);"
+    "  --glow-intensity: 1;"
+    "  --members-width: 280px;"
+    "  --guilds-width: 95px;"
+    "  --server-icon-size: 46;"
+    "  --chat-avatar-size: 40px;"
+    "  --opacity: 0.85;"
+    "  --font: \"Inter\";"
+    "  --rs-small-spacing: 2px;"
+    "  --rs-medium-spacing: 4px;"
+    "  --rs-large-spacing: 4px;"
+    "  --rs-small-width: 1.5px;"
+    "  --rs-medium-width: 2px;"
+    "  --rs-large-width: 2px;"
+    "  --rs-online-color: #43b581;"
+    "  --rs-idle-color: #faa61a;"
+    "  --rs-dnd-color: #f04747;"
+    "  --rs-offline-color: #636b75;"
+    "  --rs-streaming-color: #643da7;"
+    "  --rs-invisible-color: #747f8d;"
+    "  --rs-phone-color: var(--rs-online-color);"
+    "  --rs-phone-visible: block;"
     "}"
   ];
 in {
   home.packages = [ discordPkg ];
 
-  home.file."${destDir}/discord-wallpaper.jpg".source = wallSrc;
+  home.file."${themeDir}/discord-wallpaper.jpg".source = wallpaper;
 
-  home.file."${destDir}/${themeName}".text = cssLines;
+  home.file."${themeDir}/${themeName}".text = css;
 }
