@@ -2,7 +2,5 @@
   home.packages = with pkgs; [
     blueman
   ];
-
-  # todo: system-level activation needed:
-  # services.bluetooth.enable = true;
+  # in configuration.nix: services.bluetooth.enable = true;
 }

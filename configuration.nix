@@ -25,6 +25,10 @@
   # Network
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
+  
+  # Bluetooth
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
 
   # Users
   users.users.noy = {

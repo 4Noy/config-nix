@@ -2,27 +2,23 @@
 
 let
   root = ./.;
-
-  modules = [
-    "alacritty"
-    "bluetooth"
-        #"discord"
-    "dunst"
-    "firefox"
-    "git"
-        #"gpg"
-    "i3"
-    "kubernetes"
-        #"lf" # "ranger"
-    "neovim"
-    "picom"
-    "rofi"
-    "ssh"
-  ];
-  loadedModules = builtins.map (name: import ("${root}/modules/${name}.nix") { inherit root config lib pkgs; }) modules;
-
 in {
-  imports = loadedModules;
+  imports = [
+    ./modules/app/alacritty.nix
+    ./modules/utils/bluetooth.nix
+        #./modules/app/discord.nix
+    ./modules/utils/dunst.nix
+    ./modules/app/firefox.nix
+    ./modules/app/git.nix
+        #./modules/security/gpg.nix
+    ./modules/wm/i3.nix
+    ./modules/app/kubernetes.nix
+        #./modules/app/lf.nix # ./modules/app/ranger.nix
+    ./modules/app/neovim.nix
+    ./modules/utils/picom.nix
+    ./modules/utils/rofi.nix
+    ./modules/security/ssh.nix
+  ];
 
   home.username      = "noy";
   home.homeDirectory = "/home/noy";
