@@ -70,14 +70,14 @@ in {
           end
         end
 
-        -- Colorscheme
+        -- Theme
         vim.cmd.colorscheme("tokyonight")
 
-        -- UI
+        -- UI Plugins
         try_setup(safe_require("lualine"), { options = { theme = "tokyonight" } })
         try_setup(safe_require("bufferline"))
         try_setup(safe_require("gitsigns"))
-        try_setup(safe_require("nvim-tree"))       -- plugin expose `nvim-tree`
+        try_setup(safe_require("nvim-tree"))
         try_setup(safe_require("telescope"))
         try_setup(safe_require("editorconfig"))
         try_setup(safe_require("Comment"))
@@ -86,113 +86,99 @@ in {
           indent    = { enable = true },
         })
 
-        -- LSP & Mason
+        -- Mason & LSPconfig
+        local mason = safe_require("mason")
         local mlsp = safe_require("mason-lspconfig")
         local lspconfig = safe_require("lspconfig")
         local cmp_nvim_lsp = safe_require("cmp_nvim_lsp")
- 
+
+        if mason then
+          mason.setup()
+        end
+
         if mlsp then
-          mlsp.setup{}
- 
-          local wanted = { "pyright","clangd","lua_ls","tsserver","bashls","jsonls","yamlls","jdtls" }
+          local wanted = { "pyright", "clangd", "lua_ls", "tsserver", "bashls", "jsonls", "yamlls", "jdtls" }
           local available = mlsp.get_available_servers()
-          local to_install = vim.tbl_filter(function(s)
-            return vim.tbl_contains(available, s)
-          end, wanted)
- 
-          mlsp.setup { ensure_installed = to_install }
- 
+          local to_install = vim.tbl_filter(function(s) return vim.tbl_contains(available, s) end, wanted)
+
+          mlsp.setup({ ensure_installed = to_install })
+
           local caps = cmp_nvim_lsp and cmp_nvim_lsp.default_capabilities()
-          mlsp.setup_handlers {
+          mlsp.setup_handlers({
             function(server)
               local cfg = {}
               if caps then cfg.capabilities = caps end
-              require("lspconfig")[server].setup(cfg)
+              lspconfig[server].setup(cfg)
             end
-          }
+          })
         end
 
         -- Completion
-        local cmp     = safe_require("cmp")
+        local cmp = safe_require("cmp")
         local luasnip = safe_require("luasnip")
         if cmp then
-          cmp.setup {
-            snippet = {
-              expand = function(args)
-                if luasnip then luasnip.lsp_expand(args.body) end
-              end,
-            },
-            mapping = cmp.mapping.preset.insert {
+          cmp.setup({
+            snippet = { expand = function(args) if luasnip then luasnip.lsp_expand(args.body) end end },
+            mapping = cmp.mapping.preset.insert({
               ["<Tab>"] = cmp.mapping(function(f)
-                if cmp.visible() then
-                  cmp.select_next_item()
-                elseif luasnip and luasnip.expand_or_jumpable() then
-                  luasnip.expand_or_jump()
-                else
-                  f()
-                end
-              end, { "i","s" }),
+                if cmp.visible() then cmp.select_next_item()
+                elseif luasnip and luasnip.expand_or_jumpable() then luasnip.expand_or_jump()
+                else f() end
+              end, { "i", "s" }),
               ["<S-Tab>"] = cmp.mapping(function(f)
-                if cmp.visible() then
-                  cmp.select_prev_item()
-                elseif luasnip and luasnip.jumpable(-1) then
-                  luasnip.jump(-1)
-                else
-                  f()
-                end
-              end, { "i","s" }),
+                if cmp.visible() then cmp.select_prev_item()
+                elseif luasnip and luasnip.jumpable(-1) then luasnip.jump(-1)
+                else f() end
+              end, { "i", "s" }),
               ["<C-Space>"] = cmp.mapping.complete(),
-              ["<CR>"]     = cmp.mapping.confirm { select = true },
-            },
+              ["<CR>"]     = cmp.mapping.confirm({ select = true }),
+            }),
             sources = {
               { name = "nvim_lsp" },
               { name = "luasnip"   },
               { name = "buffer"    },
               { name = "path"      },
             },
-          }
+          })
         end
 
-        -- null-ls (format & lint)
+        -- null-ls formatting
         local null_ls = safe_require("null-ls")
         if null_ls then
-          null_ls.setup {
+          null_ls.setup({
             sources = {
               null_ls.builtins.formatting.black,
               null_ls.builtins.formatting.prettier,
               null_ls.builtins.diagnostics.eslint,
             },
-            on_attach = function(client, bufnr)
-              if client.supports_method("textDocument/formatting") then
-                vim.api.nvim_create_autocmd("BufWritePre", {
-                  buffer   = bufnr,
-                  callback = function() vim.lsp.buf.format() end,
-                })
-              end
-            end,
-          }
+          })
+
+          vim.api.nvim_create_autocmd("BufWritePre", {
+            pattern = "*",
+            callback = function() vim.lsp.buf.format({ async = false }) end,
+          })
         end
 
-        -- Tab / Spaces auto‑adapt
+        -- Adaptive Tab/Spaces
         vim.api.nvim_create_autocmd("FileType", {
           pattern = "*",
           callback = function()
             local ft = vim.bo.filetype
             if ft == "make" or ft == "makefile" then
-              vim.bo.expandtab     = false
-              vim.bo.tabstop       = 4
-              vim.bo.shiftwidth    = 4
-              vim.bo.softtabstop   = 4
+              vim.bo.expandtab   = false
+              vim.bo.tabstop     = 4
+              vim.bo.shiftwidth  = 4
+              vim.bo.softtabstop = 4
             elseif ft == "yaml" or ft == "json" or ft == "lua" then
-              vim.bo.expandtab     = true
-              vim.bo.tabstop       = 2
-              vim.bo.shiftwidth    = 2
-              vim.bo.softtabstop   = 2
+              vim.bo.expandtab   = true
+              vim.bo.tabstop     = 2
+              vim.bo.shiftwidth  = 2
+              vim.bo.softtabstop = 2
             else
-              vim.bo.expandtab     = true
-              vim.bo.tabstop       = 4
-              vim.bo.shiftwidth    = 4
-              vim.bo.softtabstop   = 4
+              vim.bo.expandtab   = true
+              vim.bo.tabstop     = 4
+              vim.bo.shiftwidth  = 4
+              vim.bo.softtabstop = 4
             end
           end,
         })
