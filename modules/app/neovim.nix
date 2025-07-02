@@ -42,10 +42,10 @@ in {
       cmp-path
       cmp-cmdline
       luasnip
-      cmp_luasnip            # underscore, correct
+      cmp_luasnip
       friendly-snippets
       null-ls-nvim
-      editorconfig-vim       # exact name dans nixpkgs
+      editorconfig-vim
       comment-nvim
     ];
 
@@ -62,68 +62,90 @@ in {
         local function safe_require(name)
           local ok, mod = pcall(require, name)
           if ok then return mod end
+          return nil
         end
 
         vim.cmd.colorscheme("tokyonight")
-        safe_require("lualine")?.setup{ options={ theme="tokyonight" } }
-        safe_require("bufferline")?.setup{}
-        safe_require("gitsigns")?.setup{}
-        safe_require("nvim-tree")?.setup{}
-        safe_require("telescope")?.setup{}
-        safe_require("editorconfig")?.setup{}
-        safe_require("Comment")?.setup{}
-        safe_require("nvim-treesitter.configs")?.setup{
-          highlight={ enable=true },
-          indent={ enable=true },
-        }
+
+        local mod = safe_require("lualine")
+        if mod then mod.setup{ options={ theme="tokyonight" } } end
+
+        mod = safe_require("bufferline")
+        if mod then mod.setup{} end
+
+        mod = safe_require("gitsigns")
+        if mod then mod.setup{} end
+
+        mod = safe_require("nvim-tree")
+        if mod then mod.setup{} end
+
+        mod = safe_require("telescope")
+        if mod then mod.setup{} end
+
+        mod = safe_require("editorconfig")
+        if mod then mod.setup{} end
+
+        mod = safe_require("Comment")
+        if mod then mod.setup{} end
+
+        mod = safe_require("nvim-treesitter.configs")
+        if mod then mod.setup{ highlight={ enable=true }, indent={ enable=true } } end
 
         local mason = safe_require("mason")
         local mason_lsp = safe_require("mason-lspconfig")
         local lspconfig = safe_require("lspconfig")
-        mason?.setup()
-        mason_lsp?.setup{ ensure_installed={"pyright","clangd","lua_ls","tsserver","bashls","jsonls","yamlls","jdtls"} }
-        local caps = safe_require("cmp_nvim_lsp")?.default_capabilities()
-        for _, s in ipairs(mason_lsp and mason_lsp.get_installed_servers() or {}) do
-          lspconfig[s].setup{ capabilities = caps }
+        if mason then mason.setup() end
+        if mason_lsp then mason_lsp.setup{ ensure_installed={"pyright","clangd","lua_ls","tsserver","bashls","jsonls","yamlls","jdtls"} } end
+
+        local caps = safe_require("cmp_nvim_lsp") and safe_require("cmp_nvim_lsp").default_capabilities()
+
+        if mason_lsp and lspconfig and caps then
+          for _, s in ipairs(mason_lsp.get_installed_servers()) do
+            lspconfig[s].setup{ capabilities = caps }
+          end
         end
 
         local cmp = safe_require("cmp")
         local luasnip = safe_require("luasnip")
-        cmp?.setup{
-          snippet={ expand=function(args) luasnip.lsp_expand(args.body) end },
-          mapping=cmp.mapping.preset.insert{
-            ["<Tab>"]=cmp.mapping(function(f)
-              if cmp.visible() then cmp.select_next_item()
-              elseif luasnip and luasnip.expand_or_jumpable() then luasnip.expand_or_jump()
-              else f() end
-            end,{"i","s"}),
-            ["<S-Tab>"]=cmp.mapping(function(f)
-              if cmp.visible() then cmp.select_prev_item()
-              elseif luasnip and luasnip.jumpable(-1) then luasnip.jump(-1)
-              else f() end
-            end,{"i","s"}),
-            ["<C-Space>"]=cmp.mapping.complete(),
-            ["<CR>"]=cmp.mapping.confirm{ select=true },
-          },
-          sources={{ name="nvim_lsp" },{ name="luasnip" },{ name="buffer" },{ name="path" }},
-        }
+        if cmp then
+          cmp.setup{
+            snippet={ expand = function(args) if luasnip then luasnip.lsp_expand(args.body) end end },
+            mapping=cmp.mapping.preset.insert{
+              ["<Tab>"]=cmp.mapping(function(f)
+                if cmp.visible() then cmp.select_next_item()
+                elseif luasnip and luasnip.expand_or_jumpable() then luasnip.expand_or_jump()
+                else f() end
+              end,{"i","s"}),
+              ["<S-Tab>"]=cmp.mapping(function(f)
+                if cmp.visible() then cmp.select_prev_item()
+                elseif luasnip and luasnip.jumpable(-1) then luasnip.jump(-1)
+                else f() end
+              end,{"i","s"}),
+              ["<C-Space>"]=cmp.mapping.complete(),
+              ["<CR>"]=cmp.mapping.confirm{ select=true },
+            },
+            sources={{ name="nvim_lsp" },{ name="luasnip" },{ name="buffer" },{ name="path" }},
+          }
+        end
 
         local null_ls = safe_require("null-ls")
-        null_ls?.setup{
-          sources={
-            null_ls.builtins.formatting.black,
-            null_ls.builtins.formatting.prettier,
-            null_ls.builtins.diagnostics.eslint,
-          },
-          on_attach=function(client, bufnr)
-            if client.supports_method("textDocument/formatting") then
-              vim.api.nvim_create_autocmd("BufWritePre",{
-                buffer=bufnr,
-                callback=function() vim.lsp.buf.format() end,
-              })
-            end
-          end,
-        }
+        if null_ls then
+          null_ls.setup{
+            sources={
+              null_ls.builtins.formatting.black,
+              null_ls.builtins.formatting.prettier,
+              null_ls.builtins.diagnostics.eslint,
+            },
+            on_attach = function(client, bufnr)
+              if client.supports_method("textDocument/formatting") then
+                vim.api.nvim_create_autocmd("BufWritePre",{
+                  buffer=bufnr,
+                  callback=function() vim.lsp.buf.format() end,
+                })
+              end
+            end,
+          }
+        end
 
         vim.api.nvim_create_autocmd("FileType",{
           pattern="*",
