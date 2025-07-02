@@ -87,21 +87,29 @@ in {
         })
 
         -- LSP & Mason
-        local mason        = safe_require("mason")
-        local mason_lsp    = safe_require("mason-lspconfig")
-        local lspconfig    = safe_require("lspconfig")
+        local mlsp = safe_require("mason-lspconfig")
+        local lspconfig = safe_require("lspconfig")
         local cmp_nvim_lsp = safe_require("cmp_nvim_lsp")
-
-        if mason        then mason.setup() end
-        if mason_lsp    then mason_lsp.setup {
-          ensure_installed = { "pyright","clangd","lua_ls","tsserver","bashls","jsonls","yamlls","jdtls" }
-        } end
-
-        local caps = cmp_nvim_lsp and cmp_nvim_lsp.default_capabilities()
-        if mason_lsp and lspconfig and caps then
-          for _, srv in ipairs(mason_lsp.get_installed_servers()) do
-            lspconfig[srv].setup { capabilities = caps }
-          end
+ 
+        if mlsp then
+          mlsp.setup{}
+ 
+          local wanted = { "pyright","clangd","lua_ls","tsserver","bashls","jsonls","yamlls","jdtls" }
+          local available = mlsp.get_available_servers()
+          local to_install = vim.tbl_filter(function(s)
+            return vim.tbl_contains(available, s)
+          end, wanted)
+ 
+          mlsp.setup { ensure_installed = to_install }
+ 
+          local caps = cmp_nvim_lsp and cmp_nvim_lsp.default_capabilities()
+          mlsp.setup_handlers {
+            function(server)
+              local cfg = {}
+              if caps then cfg.capabilities = caps end
+              require("lspconfig")[server].setup(cfg)
+            end
+          }
         end
 
         -- Completion
