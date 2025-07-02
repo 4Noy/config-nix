@@ -19,6 +19,7 @@ in {
       nodePackages.prettier
       nodePackages.yaml-language-server
       nodePackages.bash-language-server
+      nodePackages.pyright        # Install Pyright via nix
       openjdk
       editorconfig-core-c
       black
@@ -84,26 +85,24 @@ in {
           indent    = { enable = true },
         })
 
-        local mason = safe_require("mason")
-        local mlsp = safe_require("mason-lspconfig")
-        local lspconfig = safe_require("lspconfig")
+        -- Mason & LSPconfig
+        local mason       = safe_require("mason")
+        local mlsp        = safe_require("mason-lspconfig")
+        local lspconfig   = safe_require("lspconfig")
         local cmp_nvim_lsp = safe_require("cmp_nvim_lsp")
 
         if mason then mason.setup() end
 
         if mlsp then
-          local wanted = { "pyright","clangd","lua_ls","tsserver","bashls","jsonls","yamlls","jdtls" }
+          local wanted = { "clangd", "lua_ls", "tsserver", "bashls", "jsonls", "yamlls", "jdtls" }
           local available = mlsp.get_available_servers()
           local to_install = vim.tbl_filter(function(s)
             return vim.tbl_contains(available, s)
           end, wanted)
 
-          mlsp.setup {
-            ensure_installed = to_install,
-          }
+          mlsp.setup { ensure_installed = to_install }
 
           local caps = cmp_nvim_lsp and cmp_nvim_lsp.default_capabilities()
-
           mlsp.setup_handlers {
             function(server)
               local cfg = {}
@@ -113,34 +112,23 @@ in {
           }
         end
 
+        -- Completion
         local cmp     = safe_require("cmp")
         local luasnip = safe_require("luasnip")
         if cmp then
           cmp.setup {
-            snippet = {
-              expand = function(args)
-                if luasnip then luasnip.lsp_expand(args.body) end
-              end,
-            },
+            snippet = { expand = function(args) if luasnip then luasnip.lsp_expand(args.body) end end },
             mapping = cmp.mapping.preset.insert {
               ["<Tab>"] = cmp.mapping(function(f)
-                if cmp.visible() then
-                  cmp.select_next_item()
-                elseif luasnip and luasnip.expand_or_jumpable() then
-                  luasnip.expand_or_jump()
-                else
-                  f()
-                end
-              end, { "i","s" }),
+                if cmp.visible() then cmp.select_next_item()
+                elseif luasnip and luasnip.expand_or_jumpable() then luasnip.expand_or_jump()
+                else f() end
+              end, { "i", "s" }),
               ["<S-Tab>"] = cmp.mapping(function(f)
-                if cmp.visible() then
-                  cmp.select_prev_item()
-                elseif luasnip and luasnip.jumpable(-1) then
-                  luasnip.jump(-1)
-                else
-                  f()
-                end
-              end, { "i","s" }),
+                if cmp.visible() then cmp.select_prev_item()
+                elseif luasnip and luasnip.jumpable(-1) then luasnip.jump(-1)
+                else f() end
+              end, { "i", "s" }),
               ["<C-Space>"] = cmp.mapping.complete(),
               ["<CR>"]     = cmp.mapping.confirm { select = true },
             },
@@ -153,6 +141,7 @@ in {
           }
         end
 
+        -- null-ls formatting
         local null_ls = safe_require("null-ls")
         if null_ls then
           null_ls.setup {
@@ -161,19 +150,14 @@ in {
               null_ls.builtins.formatting.prettier,
               null_ls.builtins.diagnostics.eslint,
             },
-            on_attach = function(client, bufnr)
-              if client.supports_method("textDocument/formatting") then
-                vim.api.nvim_create_autocmd("BufWritePre", {
-                  buffer = bufnr,
-                  callback = function()
-                    vim.lsp.buf.format({ bufnr = bufnr })
-                  end,
-                })
-              end
-            end,
           }
+          vim.api.nvim_create_autocmd("BufWritePre", {
+            pattern = "*",
+            callback = function() vim.lsp.buf.format({ async = false }) end,
+          })
         end
 
+        -- Adaptive indentation
         vim.api.nvim_create_autocmd("FileType", {
           pattern = "*",
           callback = function()
