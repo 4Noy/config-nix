@@ -1,18 +1,16 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, ... }:
 
 let
-  # raccourci pour plugins vim
   vimPlugins = pkgs.vimPlugins;
-in
-{
+in {
   programs.neovim = {
     enable = true;
     vimAlias = true;
     defaultEditor = true;
 
     extraPackages = with pkgs; [
-      python313Full
-      python313Packages.pynvim
+      python3
+      python3Packages.pynvim
       lua-language-server
       clang-tools
       nodePackages.typescript-language-server
@@ -56,63 +54,61 @@ in
       set number relativenumber
       set mouse=a
       set clipboard=unnamedplus
-      set expandtab
       set smartindent
+      set expandtab
       filetype plugin indent on
 
-      "
-      set tabstop=4
-      set shiftwidth=4
-      set softtabstop=4
-
       lua << EOF
-        -- Theme
+        -- Protected require
+        local function safe_require(name)
+          local ok, mod = pcall(require, name)
+          if ok then return mod end
+        end
+
+        -- Colorscheme
         vim.cmd.colorscheme("tokyonight")
 
-        -- Setup lualine
-        require('lualine').setup {
-          options = { theme = 'tokyonight' }
-        }
-
-        -- Setup plugins
-        require('bufferline').setup{}
-        require('gitsigns').setup{}
-        require('nvim-tree').setup{}
-        require('telescope').setup{}
-        require('editorconfig').setup{}
-        require('Comment').setup{}
+        -- UI Plugins
+        safe_require("lualine")?.setup { options = { theme = "tokyonight" } }
+        safe_require("bufferline")?.setup{}
+        safe_require("gitsigns")?.setup{}
+        safe_require("nvim-tree")?.setup{}
+        safe_require("telescope")?.setup{}
+        safe_require("editorconfig")?.setup{}
+        safe_require("Comment")?.setup{}
 
         -- Treesitter
-        require('nvim-treesitter.configs').setup {
+        safe_require("nvim-treesitter.configs")?.setup {
           highlight = { enable = true },
           indent = { enable = true },
         }
 
-        -- Mason
-        local mason = require("mason")
-        mason.setup()
+        -- Mason & LSP
+        local mason = safe_require("mason")
+        local mason_lspconfig = safe_require("mason-lspconfig")
+        local lspconfig = safe_require("lspconfig")
 
-        require("mason-lspconfig").setup {
+        mason?.setup()
+        mason_lspconfig?.setup {
           ensure_installed = {
             "pyright", "clangd", "lua_ls", "tsserver",
             "bashls", "jsonls", "yamlls", "jdtls"
           }
         }
 
-        local lspconfig = require("lspconfig")
-        local capabilities = require('cmp_nvim_lsp').default_capabilities()
+        local capabilities = safe_require("cmp_nvim_lsp")?.default_capabilities()
 
-        for _, server in ipairs(require("mason-lspconfig").get_installed_servers()) do
+        for _, server in ipairs(mason_lspconfig?.get_installed_servers() or {}) do
           lspconfig[server].setup {
             capabilities = capabilities,
           }
         end
 
-        -- Setup nvim-cmp
-        local cmp = require('cmp')
-        local luasnip = require('luasnip')
+        -- nvim-cmp
+        local cmp = safe_require("cmp")
+        local luasnip = safe_require("luasnip")
 
-        cmp.setup {
+        cmp?.setup {
           snippet = {
             expand = function(args)
               luasnip.lsp_expand(args.body)
@@ -122,7 +118,7 @@ in
             ['<Tab>'] = cmp.mapping(function(fallback)
               if cmp.visible() then
                 cmp.select_next_item()
-              elseif luasnip.expand_or_jumpable() then
+              elseif luasnip and luasnip.expand_or_jumpable() then
                 luasnip.expand_or_jump()
               else
                 fallback()
@@ -131,7 +127,7 @@ in
             ['<S-Tab>'] = cmp.mapping(function(fallback)
               if cmp.visible() then
                 cmp.select_prev_item()
-              elseif luasnip.jumpable(-1) then
+              elseif luasnip and luasnip.jumpable(-1) then
                 luasnip.jump(-1)
               else
                 fallback()
@@ -148,27 +144,26 @@ in
           }
         }
 
-        -- Setup null-ls
-        local null_ls = require('null-ls')
-        null_ls.setup {
+        -- null-ls
+        local null_ls = safe_require("null-ls")
+        null_ls?.setup {
           sources = {
             null_ls.builtins.formatting.black,
             null_ls.builtins.formatting.prettier,
             null_ls.builtins.diagnostics.eslint,
           },
-          on_attach = function(client)
+          on_attach = function(client, bufnr)
             if client.supports_method("textDocument/formatting") then
-              vim.api.nvim_clear_autocmds({ group = 0, buffer = 0 })
               vim.api.nvim_create_autocmd("BufWritePre", {
-                buffer = 0,
-                callback = function() vim.lsp.buf.format() end
+                buffer = bufnr,
+                callback = function() vim.lsp.buf.format() end,
               })
             end
           end,
         }
 
-        -- Tab
-        vim.api.nvim_create_autocmd({"FileType"}, {
+        -- TAB auto adapt
+        vim.api.nvim_create_autocmd("FileType", {
           pattern = "*",
           callback = function()
             local ft = vim.bo.filetype
@@ -177,8 +172,16 @@ in
               vim.bo.tabstop = 4
               vim.bo.shiftwidth = 4
               vim.bo.softtabstop = 4
+            elseif ft == "yaml" or ft == "json" or ft == "lua" then
+              vim.bo.expandtab = true
+              vim.bo.tabstop = 2
+              vim.bo.shiftwidth = 2
+              vim.bo.softtabstop = 2
             else
               vim.bo.expandtab = true
+              vim.bo.tabstop = 4
+              vim.bo.shiftwidth = 4
+              vim.bo.softtabstop = 4
             end
           end
         })
