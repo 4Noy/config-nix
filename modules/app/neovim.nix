@@ -19,7 +19,6 @@ in {
       nodePackages.prettier
       nodePackages.yaml-language-server
       nodePackages.bash-language-server
-      nodePackages.pyright        # Install Pyright via nix
       openjdk
       editorconfig-core-c
       black
