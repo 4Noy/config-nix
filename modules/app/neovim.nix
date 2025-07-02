@@ -76,8 +76,8 @@ in {
         mod = safe_require("gitsigns")
         if mod then mod.setup{} end
 
-        mod = safe_require("nvim-tree")
-        if mod then mod.setup{} end
+        local tree = safe_require("nvim-tree.lua")
+        if tree then tree.setup{} end
 
         mod = safe_require("telescope")
         if mod then mod.setup{} end
