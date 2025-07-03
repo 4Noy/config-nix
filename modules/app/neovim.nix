@@ -98,7 +98,7 @@ in {
           -- Java
           lspconfig.jdtls.setup { capabilities = capabilities }
           -- TypeScript/JavaScript
-          lspconfig.tsserver.setup { capabilities = capabilities }
+          lspconfig.ts_ls.setup { capabilities = capabilities }
           -- Bash
           lspconfig.bashls.setup { capabilities = capabilities }
           -- JSON
