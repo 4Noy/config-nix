@@ -10,7 +10,7 @@ exec_always --no-startup-id dunst
 exec_always --no-startup-id picom
 exec_always --no-startup-id feh --bg-fill ~/.config/wallpapers/wallpaper.jpg
 exec --no-startup-id xset dpms 600 600 600
-exec --no-startup-id xss-lock --transfer-sleep-lock -- lock
+exec --no-startup-id xss-lock --transfer-sleep-lock -- /home/noy/.config/i3/lock
 
 
 # Sound volume controls
@@ -35,7 +35,7 @@ bindsym $mod+f fullscreen toggle
 bindsym $mod+Shift+space floating toggle
 bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
-bindsym $mod+l exec /bin/lock
+bindsym $mod+l exec /home/noy/.config/i3/lock
 
 # Focus movement
 bindsym $mod+j focus left
