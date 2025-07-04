@@ -12,6 +12,8 @@ let
     "git"
     "kubernetes"
     "neovim"
+    "obsidian"
+    "pcloud"
     "spotify"
   ];
 
@@ -70,6 +72,10 @@ in
 
   home.sessionVariables = {
         # None for now
+  };
+  
+  home.shellAliases = {
+    setup = "xrandr --output eDP-1 --right-of HDMI-1 && xrandr --output DP-1 --left-of HDMI-1 && xrandr --output DP-1 --rotate left";
   };
 
   ## Timezone and locals
