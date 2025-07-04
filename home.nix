@@ -9,11 +9,14 @@ let
     "alacritty"
     "discord"
     "firefox"
+    "gimp"
     "git"
     "kubernetes"
+    "libreoffice"
     "neovim"
     "obsidian"
     "pcloud"
+    "pdf"
     "spotify"
   ];
 
