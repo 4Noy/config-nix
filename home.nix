@@ -31,6 +31,7 @@ let
     "picom"
     "rofi"
     "python3"
+    "yarn"
   ];
 
   security = [
@@ -61,6 +62,7 @@ in
   services.gpg-agent.enable = true;
 
   # User packages
+    programs.bash.enable = true;
   fonts.fontconfig.enable = true;
   home.packages = with pkgs; [
     tokyo-night-gtk
@@ -79,6 +81,30 @@ in
   
   home.shellAliases = {
     setup = "xrandr --output eDP-1 --right-of HDMI-1 && xrandr --output DP-1 --left-of HDMI-1 && xrandr --output DP-1 --rotate left";
+    clea  = "clear";
+    cl    = "clear";
+    rls   = "ls";
+    l     = "ls";
+    
+    # Enhanced ls aliases
+    ll    = "ls -alF";
+    la    = "ls -A";
+    
+    # NixOS specific
+    rebuild = "sudo nixos-rebuild switch";
+    hm      = "home-manager switch";
+    hmtest  = "home-manager switch --dry-run";
+    
+    # Git shortcuts
+    gs      = "git status";
+    ga      = "git add";
+    gc      = "git commit";
+    gp      = "git push";
+    
+    # Common utilities
+    grep    = "grep --color=auto";
+    ".."    = "cd ..";
+    "..."   = "cd ../..";
   };
 
   ## Timezone and locals
