@@ -63,9 +63,10 @@ in
   services.gpg-agent.enable = true;
 
   # User packages
-    programs.bash.enable = true;
+  programs.bash.enable = true;
   fonts.fontconfig.enable = true;
   home.packages = with pkgs; [
+    gcc
     ## Fonts
     nerd-fonts.droid-sans-mono
     nerd-fonts.jetbrains-mono

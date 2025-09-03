@@ -12,29 +12,21 @@ in {
       python3
       python3Packages.pynvim
       python3Packages.python-lsp-server
-      lua-language-server
-      clang-tools
+      python3Packages.black
       nodePackages.typescript-language-server
-      nodePackages.vscode-langservers-extracted
-      nodePackages.eslint
+      nodePackages.typescript
       nodePackages.prettier
-      nodePackages.yaml-language-server
-      nodePackages.bash-language-server
-      openjdk
-      editorconfig-core-c
-      black
+      nodePackages.eslint
+      clang-tools
+      shellcheck
+      shfmt
+      stylua
     ];
 
     plugins = with vimPlugins; [
       tokyonight-nvim
-      lualine-nvim
-      bufferline-nvim
-      telescope-nvim
-      nvim-tree-lua
-      gitsigns-nvim
-      vim-fugitive
-      nvim-treesitter.withAllGrammars
       nvim-lspconfig
+      nvim-treesitter
       nvim-cmp
       cmp-nvim-lsp
       cmp-buffer
@@ -44,7 +36,10 @@ in {
       cmp_luasnip
       friendly-snippets
       null-ls-nvim
-      editorconfig-vim
+      lualine-nvim
+      telescope-nvim
+      nvim-tree-lua
+      gitsigns-nvim
       comment-nvim
     ];
 
@@ -57,116 +52,56 @@ in {
       set expandtab
       filetype plugin indent on
 
-      lua << EOF
-        local function safe_require(name)
-          local ok, mod = pcall(require, name)
-          return ok and mod or nil
-        end
-
-        local function try_setup(mod, opts)
-          if type(mod) == "table" and type(mod.setup) == "function" then
-            mod.setup(opts or {})
+      lua <<EOF
+      local ok, tok = pcall(require, "tokyonight")
+      if ok then
+        vim.g.tokyonight_style = "storm"
+        tok.setup({
+          on_highlights = function(hl, c)
+            hl.Comment = { fg = "#9ccf8a", italic = true }
           end
-        end
-
-        vim.cmd.colorscheme("tokyonight")
-
-        try_setup(safe_require("lualine"), { options = { theme = "tokyonight" } })
-        try_setup(safe_require("bufferline"))
-        try_setup(safe_require("gitsigns"))
-        try_setup(safe_require("nvim-tree"))
-        try_setup(safe_require("telescope"))
-        try_setup(safe_require("editorconfig"))
-        try_setup(safe_require("Comment"))
-        try_setup(safe_require("nvim-treesitter.configs"), {
-          highlight = { enable = true },
-          indent    = { enable = true },
         })
+        vim.cmd("colorscheme tokyonight")
+      end
 
-        -- LSP servers via nix-installed binaries
-        local lspconfig = safe_require("lspconfig")
-        local cmp_nvim_lsp = safe_require("cmp_nvim_lsp")
-        local capabilities = cmp_nvim_lsp and cmp_nvim_lsp.default_capabilities()
+      local cmp = require("cmp")
+      local luasnip = require("luasnip")
+      cmp.setup({
+        snippet = { expand = function(args) luasnip.lsp_expand(args.body) end },
+        mapping = cmp.mapping.preset.insert({
+          ['<C-Space>'] = cmp.mapping.complete(),
+          ['<CR>'] = cmp.mapping.confirm({ select = true }),
+          ['<Tab>'] = cmp.mapping.select_next_item(),
+          ['<S-Tab>'] = cmp.mapping.select_prev_item(),
+        }),
+        sources = { {name='nvim_lsp'}, {name='luasnip'}, {name='buffer'}, {name='path'} }
+      })
 
-        if lspconfig then
-          -- Python
-          lspconfig.pylsp.setup { capabilities = capabilities }
-          -- Lua
-          lspconfig.lua_ls.setup { capabilities = capabilities }
-          -- C/C++
-          lspconfig.clangd.setup { capabilities = capabilities }
-          -- Java
-          lspconfig.jdtls.setup { capabilities = capabilities }
-          -- TypeScript/JavaScript
-          lspconfig.ts_ls.setup { capabilities = capabilities }
-          -- Bash
-          lspconfig.bashls.setup { capabilities = capabilities }
-          -- JSON
-          lspconfig.jsonls.setup { capabilities = capabilities }
-          -- YAML
-          lspconfig.yamlls.setup { capabilities = capabilities }
-        end
+      local lspconfig = require("lspconfig")
+      local null_ls = require("null-ls")
 
-        -- Completion
-        local cmp     = safe_require("cmp")
-        local luasnip = safe_require("luasnip")
-        if cmp then
-          cmp.setup {
-            snippet = { expand = function(args) if luasnip then luasnip.lsp_expand(args.body) end end },
-            mapping = cmp.mapping.preset.insert {
-              ["<Tab>"]  = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-              ["<S-Tab>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-              ["<C-Space>"] = cmp.mapping.complete(),
-              ["<CR>"]     = cmp.mapping.confirm { select = true },
-            },
-            sources = {
-              { name = "nvim_lsp" },
-              { name = "luasnip"   },
-              { name = "buffer"    },
-              { name = "path"      },
-            },
-          }
-        end
+      local on_attach = function(client, bufnr)
+        local opts = { noremap=true, silent=true }
+        vim.api.nvim_buf_set_keymap(bufnr,'n','gd','<cmd>lua vim.lsp.buf.definition()<CR>',opts)
+        vim.api.nvim_buf_set_keymap(bufnr,'n','K','<cmd>lua vim.lsp.buf.hover()<CR>',opts)
+      end
 
-        -- null-ls formatting
-        local null_ls = safe_require("null-ls")
-        if null_ls then
-          null_ls.setup {
-            sources = {
-              null_ls.builtins.formatting.black,
-              null_ls.builtins.formatting.prettier,
-              null_ls.builtins.diagnostics.eslint,
-            },
-          }
-          vim.api.nvim_create_autocmd("BufWritePre", {
-            pattern = "*",
-            callback = function() vim.lsp.buf.format({ async = false }) end,
-          })
-        end
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-        -- Adaptive indentation
-        vim.api.nvim_create_autocmd("FileType", {
-          pattern = "*",
-          callback = function()
-            local ft = vim.bo.filetype
-            if ft == "make" or ft == "makefile" then
-              vim.bo.expandtab = false
-              vim.bo.tabstop = 4
-              vim.bo.shiftwidth = 4
-              vim.bo.softtabstop = 4
-            elseif ft == "yaml" or ft == "json" or ft == "lua" then
-              vim.bo.expandtab = true
-              vim.bo.tabstop = 2
-              vim.bo.shiftwidth = 2
-              vim.bo.softtabstop = 2
-            else
-              vim.bo.expandtab = true
-              vim.bo.tabstop = 4
-              vim.bo.shiftwidth = 4
-              vim.bo.softtabstop = 4
-            end
-          end,
-        })
+      for _, lsp in ipairs({"pylsp","clangd","ts_ls","lua_ls","bashls","jsonls","yamlls"}) do
+        lspconfig[lsp].setup({ on_attach = on_attach, capabilities = capabilities })
+      end
+
+      null_ls.setup({
+        sources = {
+          null_ls.builtins.formatting.black,
+          null_ls.builtins.formatting.stylua,
+          null_ls.builtins.formatting.prettier,
+          null_ls.builtins.formatting.clang_format,
+          null_ls.builtins.formatting.shfmt,
+        },
+        on_attach = on_attach,
+      })
       EOF
     '';
   };

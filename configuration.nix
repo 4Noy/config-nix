@@ -41,6 +41,7 @@
 
   # Base Packages
   environment.systemPackages = with pkgs; [
+    dconf
     git
   ];
 

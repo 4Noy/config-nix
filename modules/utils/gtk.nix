@@ -3,6 +3,9 @@
 {
   home.packages = with pkgs; [
     tokyo-night-gtk
+    dconf
+    gtk4
+    gtk3
   ];
 
   gtk = {
