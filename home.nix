@@ -27,6 +27,7 @@ let
   utils    = [
     "bluetooth"
     "dunst"
+    "gtk"
     "network-manager"
     "picom"
     "rofi"
@@ -65,8 +66,6 @@ in
     programs.bash.enable = true;
   fonts.fontconfig.enable = true;
   home.packages = with pkgs; [
-    tokyo-night-gtk
-
     ## Fonts
     nerd-fonts.droid-sans-mono
     nerd-fonts.jetbrains-mono
