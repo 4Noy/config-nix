@@ -67,6 +67,7 @@ in
   fonts.fontconfig.enable = true;
   home.packages = with pkgs; [
     gcc
+    xclip
     ## Fonts
     nerd-fonts.droid-sans-mono
     nerd-fonts.jetbrains-mono
@@ -85,6 +86,15 @@ in
     cl    = "clear";
     rls   = "ls";
     l     = "ls";
+    v     = "vim";
+    vi    = "vim";
+    im    = "vim";
+    vm    = "vim";
+    cle   = "clear";
+    clearl= "clear";
+    s     = "ls";
+    ca    = "cat";
+    copy  = "xclip -selection clipboard <";
     
     # Enhanced ls aliases
     ll    = "ls -alF";
