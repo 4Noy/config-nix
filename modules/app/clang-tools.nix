@@ -1,5 +1,5 @@
 { root, config, pkgs, ... }: {
   home.packages = with pkgs; [
-    clang-format
+    clang-tools
   ];
 }

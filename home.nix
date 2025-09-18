@@ -7,7 +7,7 @@ let
 
   apps     = [
     "alacritty"
-    "clang-format"
+    "clang-tools"
     "discord"
     "firefox"
     "gimp"
