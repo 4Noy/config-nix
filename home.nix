@@ -18,6 +18,7 @@ let
     "obsidian"
     "pcloud"
     "pdf"
+    "signal"
     "spotify"
   ];
 
@@ -96,6 +97,7 @@ in
     s     = "ls";
     ca    = "cat";
     copy  = "xclip -selection clipboard <";
+    untar = "tar -xf ~/Downloads/*.tar && rm ~/Downloads/*";
 
     # Coding
     c     = "g++ -Wall -Wextra -Werror -pedantic -std=c++20";
