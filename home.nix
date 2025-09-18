@@ -7,6 +7,7 @@ let
 
   apps     = [
     "alacritty"
+    "clang-format"
     "discord"
     "firefox"
     "gimp"
@@ -95,6 +96,9 @@ in
     s     = "ls";
     ca    = "cat";
     copy  = "xclip -selection clipboard <";
+
+    # Coding
+    c     = "g++ -Wall -Wextra -Werror -pedantic -std=c++20";
     
     # Enhanced ls aliases
     ll    = "ls -alF";
