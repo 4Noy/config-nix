@@ -15,6 +15,7 @@ let
     "kubernetes"
     "libreoffice"
     "neovim"
+    "nmap"
     "obsidian"
     "pcloud"
     "pdf"
@@ -92,6 +93,9 @@ in
     vi    = "vim";
     im    = "vim";
     vm    = "vim";
+    svim  = "vim";
+    bim   = "vim";
+    cim   = "vim";
     cle   = "clear";
     clearl= "clear";
     s     = "ls";
@@ -116,6 +120,10 @@ in
     ga      = "git add";
     gc      = "git commit";
     gp      = "git push";
+    g       = "git";
+    gi      = "git";
+    gt      = "git";
+    it      = "git";
     
     # Common utilities
     grep    = "grep --color=auto";
