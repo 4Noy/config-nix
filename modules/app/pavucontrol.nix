@@ -1,5 +1,5 @@
 { root, config, pkgs, ... }: {
-  environment.systemPackages = [
-    pkgs.pavucontrol
+  home.packages = with pkgs; [
+    pavucontrol
   ];
 }
