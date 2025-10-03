@@ -17,6 +17,7 @@ let
     "neovim"
     "nmap"
     "obsidian"
+    "pavucontrol"
     "pcloud"
     "pdf"
     "signal"
