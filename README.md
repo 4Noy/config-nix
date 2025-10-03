@@ -1,5 +1,7 @@
 # Nix config
 
+- Activate encryption on installation.
+
 ```sh
 cd
 nix-shell -p git -- run "git clone git@github.com:4Noy/config-nix.git"
