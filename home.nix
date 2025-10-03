@@ -22,6 +22,7 @@ let
     "pdf"
     "signal"
     "spotify"
+    "thunderbird"
   ];
 
   wms      = [
