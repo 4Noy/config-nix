@@ -129,9 +129,6 @@ in
     it      = "git";
     gti     = "git";
     tgi     = "git";
-    gi      = "git";
-    gt      = "git";
-    it      = "git";
     ti      = "git";
     
     # Common utilities
