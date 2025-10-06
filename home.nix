@@ -7,6 +7,7 @@ let
 
   apps     = [
     "alacritty"
+    "ascii"
     "clang-tools"
     "discord"
     "firefox"
@@ -126,6 +127,12 @@ in
     gi      = "git";
     gt      = "git";
     it      = "git";
+    gti     = "git";
+    tgi     = "git";
+    gi      = "git";
+    gt      = "git";
+    it      = "git";
+    ti      = "git";
     
     # Common utilities
     grep    = "grep --color=auto";
