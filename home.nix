@@ -42,6 +42,7 @@ let
   ];
 
   security = [
+    "openssl"
     "ssh"
   ];
 
