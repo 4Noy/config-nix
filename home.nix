@@ -32,10 +32,13 @@ let
 
   utils    = [
     "bluetooth"
+    "clang-tools"
+    "cmake"
     "dunst"
     "gtk"
     "network-manager"
     "picom"
+    "pre-commit"
     "rofi"
     "python3"
     "yarn"
