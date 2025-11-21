@@ -33,7 +33,6 @@ in {
           PasswordAuthentication = "no";
           PubkeyAuthentication = "yes";
           ChallengeResponseAuthentication = "no";
-          GSSAPIAuthentication = "no";
           HostbasedAuthentication = "no";
           Tunnel = "no";
           PermitLocalCommand = "no";
