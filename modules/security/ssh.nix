@@ -30,7 +30,7 @@ in {
           UserKnownHostsFile = "~/.ssh/known_hosts";
           IdentitiesOnly = "yes";
           RequestTTY = "auto";
-          PasswordAuthentication = "no";
+          PasswordAuthentication = "yes";
           PubkeyAuthentication = "yes";
           ChallengeResponseAuthentication = "no";
           HostbasedAuthentication = "no";

@@ -10,6 +10,7 @@ let
     "ascii"
     "clang-tools"
     "discord"
+    "documentation"
     "firefox"
     "gimp"
     "git"
@@ -91,6 +92,9 @@ in
   };
   
   home.shellAliases = {
+
+    go    = "cd /home/noy/Etudes/Epita/YAKA";
+
     setup = "xrandr --output eDP-1 --right-of HDMI-1 && xrandr --output DP-1 --left-of HDMI-1 && xrandr --output DP-1 --rotate left";
     clea  = "clear";
     cl    = "clear";
