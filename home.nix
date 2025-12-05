@@ -10,7 +10,6 @@ let
     "ascii"
     "clang-tools"
     "discord"
-    "documentation"
     "firefox"
     "gimp"
     "git"
