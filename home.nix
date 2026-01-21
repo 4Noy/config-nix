@@ -36,6 +36,7 @@ let
     "cmake"
     "dunst"
     "gtk"
+    "make"
     "network-manager"
     "picom"
     "pre-commit"
@@ -65,7 +66,7 @@ in
   imports = loadedModules;
   home.username      = "noy";
   home.homeDirectory = "/home/noy";
-  home.stateVersion  = "25.05";
+  home.stateVersion  = "25.11";
 
   programs.home-manager.enable = true;
 
@@ -111,7 +112,7 @@ in
     s     = "ls";
     ca    = "cat";
     copy  = "xclip -selection clipboard <";
-    untar = "tar -xf ~/Downloads/*.tar && rm ~/Downloads/*";
+    untar = "tar -xf ~/Downloads/*.tar && rm ~/Downloads/*.tar";
 
     # Coding
     c     = "g++ -Wall -Wextra -Werror -pedantic -std=c++20";

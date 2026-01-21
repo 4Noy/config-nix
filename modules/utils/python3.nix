@@ -4,7 +4,7 @@ let
   vh = "${config.home.homeDirectory}/.virtualenvs";
 in {
   home.packages = with pkgs; [
-    python313Full
+    python313
     python313Packages.virtualenv
     python313Packages.virtualenvwrapper
     python313Packages.ipython
@@ -19,7 +19,7 @@ in {
   home.file.".envrc".text = ''
     export WORKON_HOME="${vh}"
     export PROJECT_HOME="${config.home.homeDirectory}/Devel"
-    export VIRTUALENVWRAPPER_PYTHON="${pkgs.python313Full}/bin/python3"
+    export VIRTUALENVWRAPPER_PYTHON="${pkgs.python313}/bin/python3"
     source "${pkgs.python313Packages.virtualenvwrapper}/bin/virtualenvwrapper.sh"
   '';
 

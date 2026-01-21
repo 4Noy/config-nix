@@ -2,7 +2,7 @@
 
 {
   home.packages = with pkgs; [
-    tokyo-night-gtk
+    tokyonight-gtk-theme
     dconf
     gtk4
     gtk3
@@ -11,7 +11,7 @@
   gtk = {
     enable = true;
     theme = {
-      package = pkgs.tokyo-night-gtk;
+      package = pkgs.tokyonight-gtk-theme;
       name = "Tokyonight-Dark-BL";
     };
   };

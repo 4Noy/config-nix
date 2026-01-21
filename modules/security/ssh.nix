@@ -11,19 +11,20 @@ in {
     enable = true;
     package = pkgs.openssh;
 
-    # Global settings
-    hashKnownHosts = true;
-    controlMaster = "auto";
-    controlPath = "~/.ssh/master-%r@%h:%p";
-    controlPersist = "10m";
-    forwardAgent = false;
-    serverAliveInterval = 300;
-    serverAliveCountMax = 2;
+    enableDefaultConfig = false;
 
-    # Match everything
     matchBlocks = {
       default = {
         host = "*";
+        controlMaster = "auto";
+        controlPath = "~/.ssh/master-%r@%h:%p";
+        controlPersist = "10m";
+        forwardAgent = false;
+
+        hashKnownHosts = true;
+        serverAliveInterval = 300;
+        serverAliveCountMax = 2;
+
         sendEnv = [];
         extraOptions = {
           StrictHostKeyChecking = "ask";
