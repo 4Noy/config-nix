@@ -82,6 +82,17 @@ in
     ## Fonts
     nerd-fonts.droid-sans-mono
     nerd-fonts.jetbrains-mono
+
+    jetbrains.idea
+    jetbrains.jdk
+    gradle
+    maven
+    git
+    hugo
+    flameshot
+    criterion
+    vscode
+    git-lfs
   ];
 
   ## X11 Keyboard layout
@@ -93,7 +104,9 @@ in
   
   home.shellAliases = {
 
-    go    = "cd /home/noy/Etudes/Epita/YAKA";
+    go    = "cd /home/noy/Etudes/Epita/S8";
+    yaka  = "cd /home/noy/Etudes/Epita/YAKA/cpp/";
+    ctf   = "cd /home/noy/Perso/Cyber/";
 
     setup = "xrandr --output eDP-1 --right-of HDMI-1 && xrandr --output DP-1 --left-of HDMI-1 && xrandr --output DP-1 --rotate left";
     clea  = "clear";

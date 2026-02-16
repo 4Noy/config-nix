@@ -21,6 +21,7 @@ in {
       shellcheck
       shfmt
       stylua
+      criterion
 
       # Français
       hunspell
